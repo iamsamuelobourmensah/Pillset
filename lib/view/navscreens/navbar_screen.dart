@@ -21,8 +21,7 @@ class _NavBarScreenState extends State<NavBarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Obx(
-        ()=> CurvedNavigationBar(
-            
+        () => CurvedNavigationBar(
             index: _navScreenController.isSelectedIdex.value,
             backgroundColor: greenColor,
             onTap: (value) {
@@ -54,7 +53,7 @@ class _NavBarScreenState extends State<NavBarScreen> {
                   size: 38,
                 ),
               ),
-              const Icon(Icons.bar_chart,  size: 33, color: Colors.grey),
+              const Icon(Icons.bar_chart, size: 33, color: Colors.grey),
               const Icon(Icons.person, size: 33, color: Colors.grey),
             ]),
       ),
