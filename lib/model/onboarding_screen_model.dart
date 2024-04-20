@@ -1,11 +1,13 @@
+import 'dart:ffi';
+
 class OnboardingScreenModel {
   final String? mainImage;
-  final String? image1;
-  final String? image2;
+  final String? btnText;
   final String? tittle;
   final String? discription;
+ final void Function()? onTap;
 
-  OnboardingScreenModel({required this.mainImage, required this.image1, required this.image2, required this.tittle,  required this.discription});
+  OnboardingScreenModel({this.onTap, this.btnText,  this.mainImage,  this.tittle,  this.discription});
   
   
 }
