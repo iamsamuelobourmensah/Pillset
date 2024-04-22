@@ -7,22 +7,21 @@ class OnboardingScreenController extends GetxController {
 
   final List<OnboardingScreenModel> screenDetails = [
     OnboardingScreenModel(
-        mainImage: "assets/images/reception.jpg" ,
-      btnText:" Start >",
+        mainImage: "assets/images/recepMed.png" ,
+      
       
         tittle: "Reception drug",
         discription:
             "Add, edit, track admission on your drugs in two clicks. Marking a drug from your phone is easy as with the smart watch."),
     OnboardingScreenModel(
-      mainImage: "assets/images/monit.jpg",
+      mainImage: "assets/images/monitoring.png",
       tittle: "Monitoring health",
       discription:
           "View history your well-being after taking drugs in one click.",
-    btnText:" Start >",
+    
     ),
     OnboardingScreenModel(
-        mainImage: "assets/images/alarm.jpeg",
-btnText:"Get Started >",
+        mainImage: "assets/images/time.png",
         tittle: "Get notified",
         discription:
             "Our system will remind you of all the doses of the drug, so you dont have to keep everything in your mind.")

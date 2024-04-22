@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pill_set/controller/onboardingscreencontroller.dart';
 import 'package:pill_set/view/navscreens/navbar_screen.dart';
 import 'package:pill_set/view/widgets/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -17,17 +18,7 @@ final OnboardingScreenController _onboardingScreenController =
 int index = _onboardingScreenController.currentScreen.value;
 
 final _pageController = PageController();
-// void onboardingNav() {
-//   switch (index) {
-//     case 0:
-//       Get.to(() => _onboardingScreenController.screenDetails[1]);
-// case 1:
-//  Get.to(() => _onboardingScreenController.screenDetails[2]);
-//  case 2:
-//   Get.to(() => const NavBarScreen());
 
-//   }
-// }
 
 class _OboardingScreenState extends State<OnboardingScreen> {
   @override
@@ -53,21 +44,18 @@ class _OboardingScreenState extends State<OnboardingScreen> {
                         Container(
                           height: MediaQuery.of(context).size.height * .6,
                           width: MediaQuery.of(context).size.width,
-                          decoration: ShapeDecoration(
+                          decoration: BoxDecoration(
                               image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: AssetImage(
                                   "${_onboardingScreenController.screenDetails[index].mainImage}",
                                 ),
                               ),
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(25),
-                                      bottomRight: Radius.circular(25)))),
                         ),
-                        // CONTAINER CONTAINIG THE PICTURE
+                        ),
+                        // CONTAINER WITH THE PICTURE
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -142,13 +130,10 @@ class _OboardingScreenState extends State<OnboardingScreen> {
                 width: MediaQuery.of(context).size.width / 2.1,
                 child: Center(
                   child: TextButton(
-                    onPressed: () {
-                      _onboardingScreenController.currentScreen.value == 2
-                          ? Get.to(() => const NavBarScreen(),
-                              curve: Curves.easeIn)
-                          : _pageController.nextPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeIn);
+                    onPressed: () async {
+                      nextButton();
+                      final prefs = await SharedPreferences.getInstance();
+                      prefs.setBool("onboarding", true);
                     },
                     child: Text(
                       _onboardingScreenController.currentScreen.value == 2
@@ -165,26 +150,29 @@ class _OboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
             ),
+            // NEXT BUTTON
             Positioned(
               bottom: 10,
               left: -5,
               child: TextButton(
-                  onPressed: () {
-                    _pageController.animateToPage(
-                        _onboardingScreenController.screenDetails.length - 1,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeIn);
-                  },
-                  child: Text(
-                    "Skip",
-                    style: GoogleFonts.montserrat(
-                      color: greyColor,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.1,
-                      fontSize: 25,
-                    ),
-                  )),
-            )
+                onPressed: () {
+                  _pageController.animateToPage(
+                      _onboardingScreenController.screenDetails.length - 1,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeIn);
+                },
+                child: Text(
+                  "Skip",
+                  style: GoogleFonts.montserrat(
+                    color: greyColor,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.1,
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+            ),
+            //SKIP BUTTON
           ],
         ),
       ),
@@ -192,23 +180,9 @@ class _OboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-// void _navigateToPage() {
-//   switch (index) {
-//     case 0:
-//       Navigator.push(
-//         context,
-//         MaterialPageRoute(builder: (context) => const HomeScreen()),
-//       );
-//       break;
-//     case 2:
-//       Get.to(const CartScreen());
-//       break;
-//     // case 2:
-
-//     //   Navigator.push(
-//     //     context,
-//     //     MaterialPageRoute(builder: (context) => ),
-//     //   );
-//     //   break;
-//   }
-// }
+void nextButton() {
+  _onboardingScreenController.currentScreen.value == 2
+      ? Get.to(() => const NavBarScreen(), curve: Curves.easeIn)
+      : _pageController.nextPage(
+          duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+}

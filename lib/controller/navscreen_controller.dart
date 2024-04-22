@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:pill_set/view/navscreens/add_screen.dart';
 import 'package:pill_set/view/navscreens/home_screen.dart';
 import 'package:pill_set/view/navscreens/monitoring_screen.dart';
