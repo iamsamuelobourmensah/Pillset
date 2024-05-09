@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pill_set/controller/onboardingscreencontroller.dart';
-import 'package:pill_set/view/navscreens/navbar_screen.dart';
+import 'package:pill_set/view/authenticating_screen.dart/login_screen.dart';
 import 'package:pill_set/view/widgets/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -182,7 +182,7 @@ class _OboardingScreenState extends State<OnboardingScreen> {
 
 void nextButton() {
   _onboardingScreenController.currentScreen.value == 2
-      ? Get.to(() => const NavBarScreen(), curve: Curves.easeIn)
+      ? Get.to(() => LoginScreen(), curve: Curves.easeIn)
       : _pageController.nextPage(
           duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
 }
