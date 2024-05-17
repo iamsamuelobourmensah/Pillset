@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pill_set/controller/auth_controller.dart';
+import 'package:pill_set/view/authenticating_screen.dart/login_screen.dart';
 import 'package:pill_set/view/widgets/colors.dart';
 import 'package:pill_set/view/widgets/loginscreen_widgets.dart';
 import 'package:pill_set/view/widgets/signupscreen_widgets.dart';
@@ -13,15 +16,56 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-
-  final emailController = TextEditingController().clear();
-  final passwordController = TextEditingController().clear();
+  final AuthController _authController = Get.put(AuthController());
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final fullNameController = TextEditingController();
+  bool isLoading = false;
   late String fullName;
   late String password;
-
   late String email;
   bool isObscure = true;
   bool secondObscure = true;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    emailController;
+    passwordController;
+    fullNameController;
+    confirmPasswordController;
+    super.dispose();
+  }
+
+  void createNewAccount() async {
+    BuildContext localBuildContext = context;
+    setState(() {
+      isLoading = true;
+    });
+    final String response =
+        await _authController.createNewAccount(email, password, fullName);
+    if (response == "success") {
+      Future.delayed(Duration.zero, () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return const LoginScreen();
+            },
+          ),
+        );
+        snackBar(localBuildContext,
+            "Congratulation You've successfully Created an account");
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+      Future.delayed(Duration.zero, () {
+        snackBar(localBuildContext, response);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +91,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       child: signupImage),
                   fullnameText,
                   TextFormField(
+                    controller: fullNameController,
                     onChanged: (value) {
                       fullName = value;
                     },
@@ -73,20 +118,25 @@ class _SignupScreenState extends State<SignupScreen> {
                           size: 31,
                         )),
                   ),
-                                    SizedBox(
+                  SizedBox(
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
                   emailText, //emailText
                   TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: emailController,
                     onChanged: (value) {
                       email = value;
                     },
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "enter your email";
-                      } else {
-                        return null;
+                      } else if (!RegExp(
+                              r'^[\w-]+(\.[\w-]+)*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$')
+                          .hasMatch(value)) {
+                        return "enter a valid email";
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                         fillColor: whiteColor,
@@ -104,11 +154,12 @@ class _SignupScreenState extends State<SignupScreen> {
                           size: 31,
                         )),
                   ),
-                                    SizedBox(
+                  SizedBox(
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
                   passwordText,
                   TextFormField(
+                    controller: passwordController,
                     obscureText: isObscure,
                     onChanged: (value) {
                       password = value;
@@ -154,13 +205,17 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   confirmpasswordText,
                   TextFormField(
+                    controller: confirmPasswordController,
                     obscureText: secondObscure,
                     onChanged: (value) {
                       password = value;
                     },
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return "Password does match";
+                        return "confirm password";
+                      } else if (passwordController.value !=
+                          confirmPasswordController.value) {
+                        return "password does not match";
                       } else {
                         return null;
                       }
@@ -187,7 +242,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           });
                         },
                         child: Icon(
-                          secondObscure ? Icons.visibility_off : Icons.visibility,
+                          secondObscure
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                           color: greyColor,
                           size: 31,
                         ),
@@ -208,11 +265,20 @@ class _SignupScreenState extends State<SignupScreen> {
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.zero)),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (_formkey.currentState!.validate()) {
+                              createNewAccount();
+                            }
+
+                            fullNameController.clear();
+                            emailController.clear();
+                            passwordController.clear();
+                            confirmPasswordController.clear();
+                          },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Text(
-                              "Sign in",
+                            child: isLoading?const Center(child: CircularProgressIndicator()):Text(
+                              "Sign up",
                               style: GoogleFonts.montserrat(
                                   fontWeight: FontWeight.bold,
                                   color: greyColor,

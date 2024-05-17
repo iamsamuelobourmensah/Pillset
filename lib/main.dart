@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:pill_set/firebase_options.dart';
+import 'package:pill_set/view/authenticating_screen.dart/login_screen.dart';
 import 'package:pill_set/view/navscreens/navbar_screen.dart';
 
 import 'package:pill_set/view/onboardingscreens/onboardingscreen.dart';
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:onboarding?const NavBarScreen():   const OnboardingScreen(),
+      home:onboarding?const LoginScreen():   const OnboardingScreen(),
     );
   }
 }

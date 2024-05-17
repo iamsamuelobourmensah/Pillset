@@ -45,3 +45,10 @@ Widget confirmpasswordText = Text(
     fontWeight:FontWeight.bold
   ),
 );
+void  snackBar (localBuildContext,text) {
+ ScaffoldMessenger.of(localBuildContext).showSnackBar(
+            SnackBar(
+              content: Text(text),
+            ),
+          );
+}

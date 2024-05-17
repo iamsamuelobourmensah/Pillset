@@ -15,13 +15,21 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController().clear();
-  final passwordController = TextEditingController().clear();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   late String password;
 
   late String email;
   bool isObscure = true;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+emailController;
+    passwordController;
+    super.dispose();
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +54,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: loginImage),
                 emailText,
                 TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  controller: emailController,
                   onChanged: (value) {
                     email = value;
                   },
@@ -77,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 passwordText,
                 TextFormField(
+                  controller: passwordController,
                   obscureText: isObscure,
                   onChanged: (value) {
                     password = value;
