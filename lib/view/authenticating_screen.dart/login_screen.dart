@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pill_set/controller/auth_controller.dart';
 import 'package:pill_set/view/authenticating_screen.dart/signup_screen.dart';
+import 'package:pill_set/view/navscreens/navbar_screen.dart';
 import 'package:pill_set/view/widgets/colors.dart';
 import 'package:pill_set/view/widgets/loginscreen_widgets.dart';
+import 'package:pill_set/view/widgets/signupscreen_widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,21 +17,50 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-
+  final AuthController _authController = Get.put(AuthController());
+  bool isLoading = false;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
   late String password;
-
   late String email;
   bool isObscure = true;
   @override
   void dispose() {
     // TODO: implement dispose
-emailController;
+    emailController;
     passwordController;
     super.dispose();
-    
+  }
+
+   signInUser() async {
+    BuildContext localBuildContext = context;
+    setState(() {
+      isLoading = true;
+    });
+    String response = await _authController.signInUser(email, password);
+    if (response == "success") {
+      Future.delayed(Duration.zero, () {
+        return Navigator.push(
+          localBuildContext,
+          MaterialPageRoute(
+            builder: (localBuildContext) {
+              return const NavBarScreen();
+            },
+          ),
+        );
+      });
+      Future.delayed(Duration.zero, () {
+        return snackBar(localBuildContext,
+            "Congratulation You've successfully Logged in your account");
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+      Future.delayed(Duration.zero, () {
+        return snackBar(localBuildContext, response);
+      });
+    }
   }
 
   @override
@@ -62,6 +94,10 @@ emailController;
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "enter your email";
+                    } else if (!RegExp(
+                            r'^[\w-]+(\.[\w-]+)*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$')
+                        .hasMatch(value)) {
+                      return "enter a valid email";
                     } else {
                       return null;
                     }
@@ -142,11 +178,13 @@ emailController;
                                   borderRadius: BorderRadius.zero)),
                         ),
                         onPressed: () {
-                          Get.to(() => const SignupScreen());
+                          if (_formkey.currentState!.validate()) {
+                            signInUser();
+                          }
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Text(
+                          child: isLoading?const Center(child: CircularProgressIndicator()):Text(
                             "Sign in",
                             style: GoogleFonts.montserrat(
                                 fontWeight: FontWeight.bold,
@@ -156,6 +194,21 @@ emailController;
                           ),
                         )),
                   ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.01,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          Get.to(const SignupScreen());
+                        },
+                        child: Text("don't have an account?",
+                            style: GoogleFonts.montserrat(
+                                color: greyColor, fontSize: 15)))
+                  ],
                 )
               ],
             ),

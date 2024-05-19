@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pill_set/controller/auth_controller.dart';
 import 'package:pill_set/view/authenticating_screen.dart/login_screen.dart';
+import 'package:pill_set/view/navscreens/navbar_screen.dart';
 import 'package:pill_set/view/widgets/colors.dart';
 import 'package:pill_set/view/widgets/loginscreen_widgets.dart';
 import 'package:pill_set/view/widgets/signupscreen_widgets.dart';
@@ -37,32 +39,26 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-  void createNewAccount() async {
+  createNewUser() async {
     BuildContext localBuildContext = context;
     setState(() {
       isLoading = true;
     });
-    final String response =
+    String response =
         await _authController.createNewAccount(email, password, fullName);
     if (response == "success") {
+      Get.to(() => const NavBarScreen());
       Future.delayed(Duration.zero, () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return const LoginScreen();
-            },
-          ),
-        );
         snackBar(localBuildContext,
-            "Congratulation You've successfully Created an account");
+            "Congratulation you have successfully created an account ");
       });
     } else {
       setState(() {
         isLoading = false;
       });
-      Future.delayed(Duration.zero, () {
-        snackBar(localBuildContext, response);
+        Future.delayed(Duration.zero, () {
+        snackBar(localBuildContext,
+           response);
       });
     }
   }
@@ -267,7 +263,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                           onPressed: () {
                             if (_formkey.currentState!.validate()) {
-                              createNewAccount();
+                              createNewUser();
                             }
 
                             fullNameController.clear();
@@ -277,16 +273,36 @@ class _SignupScreenState extends State<SignupScreen> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: isLoading?const Center(child: CircularProgressIndicator()):Text(
-                              "Sign up",
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.bold,
-                                  color: greyColor,
-                                  fontSize: 20,
-                                  letterSpacing: 0.1),
-                            ),
+                            child: isLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : Text(
+                                    "Sign up",
+                                    style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.bold,
+                                        color: greyColor,
+                                        fontSize: 20,
+                                        letterSpacing: 0.1),
+                                  ),
                           )),
                     ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      InkWell(
+                          onTap: () {
+                            Get.to(const LoginScreen());
+                          },
+                          child: Text(
+                            "already have an account?",
+                            style: GoogleFonts.montserrat(
+                                color: greyColor, fontSize: 15),
+                          ))
+                    ],
                   )
                 ],
               ),
