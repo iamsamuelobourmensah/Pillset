@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthController {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
-
+  
   Future<String> createNewAccount(
       String email, String password, String fullName) async {
     String response = "Ohpss something went wrong";

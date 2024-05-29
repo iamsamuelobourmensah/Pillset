@@ -28,19 +28,19 @@ class _NavBarScreenState extends State<NavBarScreen> {
               });
             },
             items: [
-              const Icon(
+               Icon(
                 Icons.home,
-                color: Colors.grey,
+                color:ashColor ,
                 size: 33,
               ),
-              const Icon(
+               Icon(
                 Icons.radar,
                 size: 33,
-                color: Colors.grey,
+                color: ashColor,
               ),
               Container(
                 decoration: ShapeDecoration(
-                    color: Colors.grey,
+                    color:greyColor,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25))),
                 height: MediaQuery.of(context).size.height * 0.06,
@@ -51,8 +51,8 @@ class _NavBarScreenState extends State<NavBarScreen> {
                   size: 38,
                 ),
               ),
-              const Icon(Icons.bar_chart, size: 33, color: Colors.grey),
-              const Icon(Icons.person, size: 33, color: Colors.grey),
+               Icon(Icons.bar_chart, size: 33, color: ashColor),
+               Icon(Icons.person, size: 33, color: ashColor),
             ]),
       ),
       body:

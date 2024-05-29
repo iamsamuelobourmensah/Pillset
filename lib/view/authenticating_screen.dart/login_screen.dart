@@ -210,6 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: greyColor, fontSize: 15)))
                   ],
                 )
+                
               ],
             ),
           ),
