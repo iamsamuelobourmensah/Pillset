@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pill_set/view/onboardingscreens/onboardingscreen.dart';
 import 'package:pill_set/view/widgets/colors.dart';
 import 'package:pill_set/view/widgets/home_screen.dart';
 
