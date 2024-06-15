@@ -2,17 +2,27 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:pill_set/firebase_options.dart';
+import 'package:pill_set/model/vital_hive_model.dart';
 import 'package:pill_set/view/navscreens/navbar_screen.dart';
 
-import 'package:pill_set/view/onboardingscreens/onboardingscreen.dart';
+import 'package:pill_set/view/widgets/boxes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-);
+  );
+  await Hive.initFlutter();
+  Hive.registerAdapter(VitalsHiveAdapter());
+  temperatureBox = await Hive.openBox("temperature");
+  
+  defaultBoxValues();
+  // saturationBox = await Hive.openBox("saturation");
+  // pressureBox = await Hive.openBox("pressure");
+  // heartRateBox = await Hive.openBox("heartrate");
   final prefs = await SharedPreferences.getInstance();
   final onboarding = prefs.getBool("onboarding") ?? false;
   runApp(MyApp(
@@ -51,7 +61,26 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:onboarding?const NavBarScreen():   const OnboardingScreen(),
+      home: onboarding ? const NavBarScreen() : const NavBarScreen(),
     );
+  }
+}
+
+defaultBoxValues() async {
+  // Get the Hive box instance
+  temperatureBox = await Hive.openBox<VitalsHive>('temperature');
+
+// Check if the box is empty
+  if (temperatureBox.isEmpty) {
+    // Set the default values for the VitalsHive objects
+    VitalsHive defaultVitals = VitalsHive(
+        temperature: '36.2',
+        saturation: '99',
+        lastUpdated: DateTime.now(),
+        pressure: '117/80',
+        heartRate: '99');
+
+    // Add the default VitalsHive object to the box
+    await temperatureBox.put(0, defaultVitals);
   }
 }

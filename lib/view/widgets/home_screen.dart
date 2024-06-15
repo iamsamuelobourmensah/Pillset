@@ -2,8 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:pill_set/model/medcard_model.dart';
+import 'package:pill_set/model/vital_hive_model.dart';
 import 'package:pill_set/model/vitalscard_model.dart';
+import 'package:pill_set/view/onboardingscreens/onboardingscreen.dart';
+import 'package:pill_set/view/widgets/boxes.dart';
 import 'package:pill_set/view/widgets/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -35,7 +39,7 @@ class _CalenderWidgetState extends State<CalenderWidget> {
             ),
           ), // YOUR PLAN TEXT
           Positioned(
-            right: 20,
+            right: 10,
             top: -3,
             child: Container(
               height: 18,
@@ -115,16 +119,22 @@ class VitalsCard extends StatefulWidget {
 class _VitalsCardState extends State<VitalsCard> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return ValueListenableBuilder(
+      valueListenable: temperatureBox.listenable(),
+      builder: (BuildContext context, box, Widget? child) {
+        return SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.5,
       child: GridView.builder(
-          itemCount: listOfItemsInVitalsCard.length,
+       // physics: const NeverScrollableScrollPhysics(),
+          itemCount: 4,
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               mainAxisSpacing: 10,
               mainAxisExtent: 200,
               crossAxisSpacing: 10,
               maxCrossAxisExtent: 200),
           itemBuilder: (context, index) {
+        VitalsHive vitals = temperatureBox.getAt(temperatureBox.length - 1);// to display the latext updated vitals 
+
             Color color = listOfItemsInVitalsCard[index].figureColor!;
             // DateTime _lastDateUpdated = DateTime.now();
             return Container(
@@ -151,10 +161,37 @@ class _VitalsCardState extends State<VitalsCard> {
                         listOfItemsInVitalsCard[index].img!),
                     Row(
                       children: [
+                        if(index==0)
                         Text(
-                          listOfItemsInVitalsCard[index].figure!,
+                        vitals.saturation! ,
                           style: GoogleFonts.montserrat(
-                              fontSize: 30,
+                              fontSize: 25,
+                              color: color,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        
+                        if(index==1)
+                        Text(
+                        vitals.heartRate! ,
+
+                          style: GoogleFonts.montserrat(
+                              fontSize: 25,
+                              color: color,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        if(index == 2)
+                        Text(
+                        vitals.pressure! ,
+                          style: GoogleFonts.montserrat(
+                              fontSize: 25,
+                              color: color,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        if(index == 3)
+                        Text(
+                        vitals.temperature! ,
+                          style: GoogleFonts.montserrat(
+                              fontSize: 25,
                               color: color,
                               fontWeight: FontWeight.bold),
                         ),
@@ -180,10 +217,8 @@ class _VitalsCardState extends State<VitalsCard> {
                           ),
                         ),
                         Text(
-                          listOfItemsInVitalsCard[index]
-                              .dateTime!
-                              .toIso8601String()
-                              .substring(0, 10),
+                          vitals.lastUpdated!.toIso8601String().substring(0,10)
+,
                           style: GoogleFonts.montserrat(
                             fontSize: 12, color: greyColor,
                             // fontWeight:FontWeight.bold
@@ -197,6 +232,8 @@ class _VitalsCardState extends State<VitalsCard> {
             );
           }),
     ); // End Of VitalsCard
+      },
+    );
   }
 }
 
@@ -207,7 +244,7 @@ final List<VitalsCardModel> listOfItemsInVitalsCard = [
       DateTime.now(), greenColor),
   VitalsCardModel("PRESSURE", "assets/images/sphy.png", "117/90", "mmHg",
       DateTime.now(), greenColor),
-  VitalsCardModel("TEMPERATURE", "assets/images/thermo.png", "36.2", "®C",
+  VitalsCardModel("TEMPERATURE", "assets/images/thermo.png", "36.2", "°C",
       DateTime.now(), amberColor)
 ];
 
@@ -262,28 +299,24 @@ class MedCard extends StatelessWidget {
                     ),
                   ],
                 ),
-
               ],
             ),
-                       const Spacer(),
-                            Row(
-                  children: List.generate(
-                    5,
-                    (index) => AnimatedContainer(
-                      duration: const Duration(
-                        milliseconds: 300,
-                      ),
-                      height: 10,
-                      width: 10,
-                       margin: const EdgeInsets.symmetric(horizontal: 4),
-                  
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: ashColor
-                      ),
-                    ),
+            const Spacer(),
+            Row(
+              children: List.generate(
+                5,
+                (index) => AnimatedContainer(
+                  duration: const Duration(
+                    milliseconds: 300,
                   ),
+                  height: 10,
+                  width: 10,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10), color: ashColor),
                 ),
+              ),
+            ),
           ],
         ),
       ),
