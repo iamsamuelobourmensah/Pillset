@@ -182,7 +182,7 @@ class _OboardingScreenState extends State<OnboardingScreen> {
 
 void nextButton() {
   _onboardingScreenController.currentScreen.value == 2
-      ? Get.to(() => LoginScreen(), curve: Curves.easeIn)
+      ? Get.to(() => const LoginScreen(), curve: Curves.easeIn)
       : _pageController.nextPage(
           duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
 }

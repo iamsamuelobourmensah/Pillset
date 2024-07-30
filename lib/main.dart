@@ -6,6 +6,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:pill_set/firebase_options.dart';
 import 'package:pill_set/model/vital_hive_model.dart';
 import 'package:pill_set/view/navscreens/navbar_screen.dart';
+import 'package:pill_set/view/onboardingscreens/onboardingscreen.dart';
 
 import 'package:pill_set/view/widgets/boxes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +19,7 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(VitalsHiveAdapter());
   temperatureBox = await Hive.openBox("temperature");
-  
+
   defaultBoxValues();
   // saturationBox = await Hive.openBox("saturation");
   // pressureBox = await Hive.openBox("pressure");
@@ -30,9 +31,21 @@ void main() async {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final bool onboarding;
   const MyApp({super.key, this.onboarding = false});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    defaultBoxValues();
+  }
 
   // This widget is the root of your application.
   @override
@@ -61,26 +74,26 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: onboarding ? const NavBarScreen() : const NavBarScreen(),
+      home: widget.onboarding ? const NavBarScreen() : const OnboardingScreen(),
     );
   }
 }
 
-defaultBoxValues() async {
+void defaultBoxValues() {
   // Get the Hive box instance
-  temperatureBox = await Hive.openBox<VitalsHive>('temperature');
+  // temperatureBox = Hive.box<VitalsHive>('temperature');
 
 // Check if the box is empty
   if (temperatureBox.isEmpty) {
     // Set the default values for the VitalsHive objects
     VitalsHive defaultVitals = VitalsHive(
         temperature: '36.2',
-        saturation: '99',
+        saturation: '100',
         lastUpdated: DateTime.now(),
         pressure: '117/80',
         heartRate: '99');
 
     // Add the default VitalsHive object to the box
-    await temperatureBox.put(0, defaultVitals);
+    temperatureBox.put(2, defaultVitals);
   }
 }

@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:pill_set/main.dart';
 import 'package:pill_set/model/medcard_model.dart';
 import 'package:pill_set/model/vital_hive_model.dart';
 import 'package:pill_set/model/vitalscard_model.dart';
 import 'package:pill_set/view/onboardingscreens/onboardingscreen.dart';
 import 'package:pill_set/view/widgets/boxes.dart';
 import 'package:pill_set/view/widgets/colors.dart';
+import 'package:pill_set/view/widgets/text.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalenderWidget extends StatefulWidget {
@@ -32,14 +34,10 @@ class _CalenderWidgetState extends State<CalenderWidget> {
           Positioned(
             left: 10,
             top: -13,
-            child: Text(
-              "Your Plan",
-              style: GoogleFonts.montserrat(
-                  color: greyColor, fontSize: 30, fontWeight: FontWeight.bold),
-            ),
+            child: Ltext(color: greyColor, fw: FontWeight.bold, text: "Your Plan")
           ), // YOUR PLAN TEXT
           Positioned(
-            right: 10,
+            right: 7,
             top: -3,
             child: Container(
               height: 18,
@@ -63,7 +61,7 @@ class _CalenderWidgetState extends State<CalenderWidget> {
               rightChevronVisible: false,
               leftChevronVisible: false,
               formatButtonVisible: false,
-              headerPadding: const EdgeInsets.only(left: 300, bottom: 10),
+              headerPadding: const EdgeInsets.only(left: 280, bottom: 10),
               titleTextStyle: GoogleFonts.montserrat(
                   color: ashColor,
                   fontSize: 10,
@@ -123,129 +121,104 @@ class _VitalsCardState extends State<VitalsCard> {
       valueListenable: temperatureBox.listenable(),
       builder: (BuildContext context, box, Widget? child) {
         return SizedBox(
-      height: MediaQuery.sizeOf(context).height * 0.5,
-      child: GridView.builder(
-       // physics: const NeverScrollableScrollPhysics(),
-          itemCount: 4,
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              mainAxisSpacing: 10,
-              mainAxisExtent: 200,
-              crossAxisSpacing: 10,
-              maxCrossAxisExtent: 200),
-          itemBuilder: (context, index) {
-        VitalsHive vitals = temperatureBox.getAt(temperatureBox.length - 1);// to display the latext updated vitals 
+          height: MediaQuery.sizeOf(context).height * 0.5,
+          child: GridView.builder(
+              // physics: const NeverScrollableScrollPhysics(),
+              itemCount: 4,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  mainAxisSpacing: 10,
+                  mainAxisExtent: 200,
+                  crossAxisSpacing: 10,
+                  maxCrossAxisExtent: 200),
+              itemBuilder: (context, index) {
+                VitalsHive vitals = temperatureBox.getAt(temperatureBox.length -
+                    1); // to display the latest updated vitals
 
-            Color color = listOfItemsInVitalsCard[index].figureColor!;
-            // DateTime _lastDateUpdated = DateTime.now();
-            return Container(
-              height: MediaQuery.sizeOf(context).height * 0.7,
-              width: MediaQuery.sizeOf(context).width * 0.5,
-              decoration: BoxDecoration(
-                  color: whiteColor, borderRadius: BorderRadius.circular(23)),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      listOfItemsInVitalsCard[index].tittle!,
-                      style: GoogleFonts.montserrat(
-                          fontSize: 15, color: greyColor),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.sizeOf(context).height * 0.02,
-                    ),
-                    Image.asset(
-                        height: 80,
-                        width: 80,
-                        listOfItemsInVitalsCard[index].img!),
-                    Row(
+                Color color = listOfItemsInVitalsCard[index].figureColor!;
+                // DateTime _lastDateUpdated = DateTime.now();
+                return Container(
+                  height: MediaQuery.sizeOf(context).height * 0.7,
+                  width: MediaQuery.sizeOf(context).width * 0.5,
+                  decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(23)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if(index==0)
                         Text(
-                        vitals.saturation! ,
+                          listOfItemsInVitalsCard[index].tittle!,
                           style: GoogleFonts.montserrat(
-                              fontSize: 25,
-                              color: color,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        
-                        if(index==1)
-                        Text(
-                        vitals.heartRate! ,
-
-                          style: GoogleFonts.montserrat(
-                              fontSize: 25,
-                              color: color,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        if(index == 2)
-                        Text(
-                        vitals.pressure! ,
-                          style: GoogleFonts.montserrat(
-                              fontSize: 25,
-                              color: color,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        if(index == 3)
-                        Text(
-                        vitals.temperature! ,
-                          style: GoogleFonts.montserrat(
-                              fontSize: 25,
-                              color: color,
-                              fontWeight: FontWeight.bold),
+                              fontSize: 15, color: greyColor),
                         ),
                         SizedBox(
-                          width: MediaQuery.sizeOf(context).width * 0.015,
+                          height: MediaQuery.sizeOf(context).height * 0.02,
                         ),
-                        Text(
-                          listOfItemsInVitalsCard[index].unit!,
-                          style: GoogleFonts.montserrat(
-                            fontSize: 15, color: greyColor,
-                            // fontWeight:FontWeight.bold
-                          ),
-                        ),
-                      ],
-                    ), //ROW CONTAINING FIGURE AND UNIT
-                    Row(
-                      children: [
-                        Text(
-                          "Last Update :",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 12, color: greyColor,
-                            // fontWeight:FontWeight.bold
-                          ),
-                        ),
-                        Text(
-                          vitals.lastUpdated!.toIso8601String().substring(0,10)
-,
-                          style: GoogleFonts.montserrat(
-                            fontSize: 12, color: greyColor,
-                            // fontWeight:FontWeight.bold
-                          ),
+                        Image.asset(
+                            height: 80,
+                            width: 80,
+                            listOfItemsInVitalsCard[index].img!),
+                        Row(
+                          children: [
+                            if (index == 0)
+                              vitalsText(vitals.saturation, color),
+                            if (index == 1) vitalsText(vitals.heartRate, color),
+                            if (index == 2) vitalsText(vitals.pressure, color),
+                            if (index == 3)
+                              vitalsText(vitals.temperature, color),
+                            SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.015,
+                            ),
+                            Text(
+                              listOfItemsInVitalsCard[index].unit!,
+                              style: GoogleFonts.montserrat(
+                                fontSize: 15, color: greyColor,
+                                // fontWeight:FontWeight.bold
+                              ),
+                            ),
+                          ],
+                        ), //ROW CONTAINING FIGURE AND UNIT
+                        Row(
+                          children: [
+                            Text(
+                              "Last Update :",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 12, color: greyColor,
+                                // fontWeight:FontWeight.bold
+                              ),
+                            ),
+                            Text(
+                              vitals.lastUpdated!
+                                  .toIso8601String()
+                                  .substring(0, 10),
+                              style: GoogleFonts.montserrat(
+                                fontSize: 12, color: greyColor,
+                                // fontWeight:FontWeight.bold
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            );
-          }),
-    ); // End Of VitalsCard
+                  ),
+                );
+              }),
+        ); // End Of VitalsCard
       },
     );
   }
 }
 
 final List<VitalsCardModel> listOfItemsInVitalsCard = [
-  VitalsCardModel("SATURATION", "assets/images/blood.png", "99", "%",
-      DateTime.now(), greenColor),
-  VitalsCardModel("HEART RATE", "assets/images/heart.png", "91", "bpm",
-      DateTime.now(), greenColor),
-  VitalsCardModel("PRESSURE", "assets/images/sphy.png", "117/90", "mmHg",
-      DateTime.now(), greenColor),
-  VitalsCardModel("TEMPERATURE", "assets/images/thermo.png", "36.2", "°C",
-      DateTime.now(), amberColor)
+  VitalsCardModel("SATURATION", "assets/images/blood.png",  "%",
+      greenColor),
+  VitalsCardModel("HEART RATE", "assets/images/heart.png",  "bpm",
+      greenColor),
+  VitalsCardModel("PRESSURE", "assets/images/sphy.png",  "mmHg",
+       greenColor),
+  VitalsCardModel("TEMPERATURE", "assets/images/thermo.png", "°C",
+     amberColor)
 ];
 
 class MedCard extends StatelessWidget {
@@ -330,3 +303,11 @@ final List<MedCardModel> listOfItemInMedCard = [
   MedCardModel(img: "assets/images/pill.png", qty: 4, medName: "MN Garlic Oil"),
   MedCardModel(img: "assets/images/pinkpill.png", qty: 1, medName: "Clove-Ds"),
 ];
+void defaultV(vital) {
+  if (temperatureBox.isEmpty) {
+    defaultBoxValues();
+  } else if (index == 0) {
+    vital;
+  }
+}
+

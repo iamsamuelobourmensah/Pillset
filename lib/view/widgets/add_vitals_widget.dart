@@ -94,7 +94,7 @@ class _AddVitalsWidgetState extends State<AddVitalsWidget> {
                         saturationController.clear();
                         pressureController.clear();
                         heartRateController.clear();
-                        defaultBoxValues();
+                  
                       }
                     },
                     child: Padding(
@@ -152,17 +152,19 @@ class _AddVitalsTextFieldState extends State<AddVitalsTextField> {
             },
             controller: widget.textEditingController,
             decoration: InputDecoration(
+        
+              
               hintText: widget.labelText,
               hintStyle: GoogleFonts.montserrat(
                   color: ashColor, fontSize: 20, letterSpacing: 0.1),
 
-              isDense: true,
+           isDense: true,
               fillColor: whiteColor,
               filled: true,
               border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(25)),
-              focusedBorder: InputBorder.none,
+             // focusedBorder: BorderSide.none,
               // enabledBorder: InputBorder.none
             ),
           ),

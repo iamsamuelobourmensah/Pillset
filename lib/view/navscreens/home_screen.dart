@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pill_set/view/widgets/colors.dart';
 import 'package:pill_set/view/widgets/home_screen.dart';
+import 'package:pill_set/view/widgets/text.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,12 +16,15 @@ class HomeScreen extends StatelessWidget {
           child: SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const CalenderWidget(),
+
                 const VitalsCard(),
                  SizedBox(
                      height: MediaQuery.sizeOf(context).height * .01,
                 ),
+                Ltext(color: greyColor, fw: FontWeight.bold, text: "Medication"),
                 SizedBox(
                     height: MediaQuery.sizeOf(context).height * .2,
                     child: ListView.separated(
